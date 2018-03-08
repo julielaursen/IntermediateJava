@@ -21,6 +21,10 @@ public class Check {
 		String[] tens = { "NULL", "NULL", "TWENTY", "THIRTY", "FOURTY", "FIFTY",
 		        "SIXTY", "SEVENTY", "EIGHTY", "NINETY" };
 		
+		String stringAmount = String.valueOf(amount);
+		String[] parts = stringAmount.split("\\.");
+		String cents = parts[1];
+		
 		
 	    String str = "";
 	    String hundredsStr = "";
@@ -31,15 +35,19 @@ public class Check {
 	    
 	    if (amount >= 100) {
 	    	hundredsStr = toTwenty[ (int) (amount / 100)];
-	    	//System.out.println(hundredsStr);
 	        tensInt = amount % 100;
-	        //System.out.println("remainder is" + tensInt);
 	        onesInt = amount % 10;
-	        //System.out.println("remainder is" + onesInt);
-	    	tensStr = tens[(int) (tensInt / 10)];
-	    	//System.out.println("tensStr is " + tensStr);
-	    	onesStr = toTwenty[(int) (onesInt % 10)];
-	        str = hundredsStr + " hundred " +  tensStr + onesStr;
+	    	if (tensInt < 20){
+	    		tensStr = toTwenty[(int)(tensInt)];
+	    		//System.out.println(tensInt);
+	    		//System.out.println(tensStr);
+	        	str = hundredsStr + " hundred " +  tensStr;
+	    	}
+	        	else{	
+	    	    tensStr = tens[(int) (tensInt / 10)];
+	    	    onesStr = toTwenty[(int) (onesInt % 10)];
+		        str = hundredsStr + " hundred " +  tensStr + onesStr;
+	    		}
  	    }
 	    else if (amount < 100 && amount >= 20) {
 	    	str = tens[(int) (amount / 10)] + toTwenty[(int) (amount % 10)];
@@ -47,7 +55,7 @@ public class Check {
 	    else if(amount < 20){
 	        str = toTwenty[ (int) amount ];
   	    }
-	    System.out.println(str);
+	    System.out.println(str + " dollars and " + cents + "/100 cents");
 	    return str;
 
 
