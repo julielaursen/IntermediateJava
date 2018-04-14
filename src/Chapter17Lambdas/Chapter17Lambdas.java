@@ -31,7 +31,8 @@ public class Chapter17Lambdas {
   
   List<Invoice> list = Arrays.asList(invoices);
   System.out.println("Create invoice list:");
-  //list.stream().forEach(System.out::println);
+  list.stream()
+  .forEach(System.out::println);
   
   //a) print values in sorted order by part description
   System.out.printf("%nValues displayed in sorted order by description:%n");

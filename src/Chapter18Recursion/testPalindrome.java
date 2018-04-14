@@ -18,15 +18,24 @@ public class testPalindrome {
 	System.out.println("Enter a string");
 	Scanner scanner = new Scanner(System.in);
 	String input = scanner.nextLine();
+	System.out.println(isPalindrome(input));
 	scanner.close();
 
 	
 	//put the string into an array
-	char[] charArray = input.toCharArray();
-	System.out.println(charArray);
-	for (int i = charArray.length-1; i>=0; i--)
-		myArray.add(i);
 	
-	//run an if statement. if input == myArray, then it's a palindrome
+	}
+	
+	//return boolean value 
+	public static boolean isPalindrome(String myString)
+	{
+	   if (myString.length() == 1 || myString.isEmpty())
+		   return true;
+	   else if (myString.length()==2)
+		   return myString.charAt(0)==myString.charAt(myString.length()-1);
+	   else if (myString.charAt(0)==myString.charAt(myString.length()-1))
+		   return isPalindrome(myString.substring(1, myString.length()-1));		   
+	   else
+		   return false;	   
 	}
 }
