@@ -9,8 +9,6 @@ public class GenericMethodTest {
 		Integer[] intArray = {1, 2, 3, 4, 5};
 		Double[] doubleArray = {1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7};
 		Character[] charArray = {'H', 'E', 'L', 'L', 'O'};
-		Integer lowSubscript = -1; //or lower
-		Integer highSubscript; //inputArray.length or higher
 		
 		System.out.printf("%nArray integerArray contains:%n");
 		printArray(intArray);
@@ -20,16 +18,13 @@ public class GenericMethodTest {
 		printArray(charArray);
 		System.out.printf("%nTest Array%n");
 		try{
-			printArray(intArray, 0, 2);
+			printArray(intArray, -1, 6);
 				}
 		catch(InvalidSubscriptException ise){
 			System.out.println(ise);
 		}
 		}
 	
-	//if either lowSubscript or highSubscript is out of range
-	//throw an invalidSubscriptException, otherwise print number of elements
-	//use super method to put method in an exception
 	public static <T> void printArray(T[] inputArray)
 	{
 		for (T element : inputArray)
@@ -42,10 +37,13 @@ public class GenericMethodTest {
 	public static <T> void printArray(T[] inputArray, int lowSubscript, int highSubscript) throws InvalidSubscriptException
 	{
 		//if lowSubscript or highSubscript
+		if (lowSubscript < 0 && highSubscript > inputArray.length-1)
+			throw new InvalidSubscriptException("LowSubscript and highSubscript out of bounds");
 		if (lowSubscript < 0)
 			throw new InvalidSubscriptException("lowSubscript out of bounds");
 		if (highSubscript > inputArray.length-1)
 			throw new InvalidSubscriptException("highSubscript out of bounds");
+		
 		
 		for (int i = lowSubscript; i<= highSubscript; i++)
 		{

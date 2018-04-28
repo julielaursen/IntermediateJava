@@ -1,4 +1,4 @@
-package Chapter23Concurrency;
+package OriginalConcurrencyFile;
 
 // Fig 23.7: SharedArrayTest.java
 // Executing two Runnables to add elements to a shared SimpleArray.
@@ -12,38 +12,30 @@ public class SharedArrayTest
 {
    public static void main(String[] arg)
    {
+	   int size = 15000000;
+	   int start1 = 0;
+	   int limit = size / 2;
       // construct the shared object
-	  int size = 15000000;
-	  int start1 = 0;
-	  int limit = size / 4;
-	  //int limit1 = limit;
-	  //int start2 = limit;
-	  //int limit2 = start2 + limit;
-	  
       SimpleArray sharedSimpleArray = new SimpleArray(size);
 
       // create two tasks to write to the shared SimpleArray
       ArrayWriter writer1 = new ArrayWriter(limit, sharedSimpleArray);
       ArrayWriter writer2 = new ArrayWriter(limit, sharedSimpleArray);
-      ArrayWriter writer3 = new ArrayWriter(limit, sharedSimpleArray);
-      ArrayWriter writer4 = new ArrayWriter(limit, sharedSimpleArray);
 
       // execute the tasks with an ExecutorService
       ExecutorService executorService = Executors.newCachedThreadPool();
       Instant start = Instant.now();
-      
-      
+
       executorService.execute(writer1);
       executorService.execute(writer2);
-      executorService.execute(writer3);
-      executorService.execute(writer4);
-
+      
       executorService.shutdown();
+
       try
       {
-         // wait 1 minute for both writers to finish executing
          boolean tasksEnded = 
-          executorService.awaitTermination(1, TimeUnit.SECONDS);
+        		 
+            executorService.awaitTermination(60, TimeUnit.SECONDS);
 
          if (tasksEnded)
          {
