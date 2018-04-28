@@ -32,27 +32,30 @@ public class TestBonus {
 		     System.err.println("Error: " + e.getMessage());
 		 }
 		
-		menu.displayInventory();
-		menu.display_menu();
- 		menu.getTotal();
+	
  		
- 		String cashierFile = "cashier.txt";
+ 		String cashierFile = "Cashier.txt";
  		try{
-			 FileInputStream fstream = new FileInputStream(cashierFile);
-			 DataInputStream in = new DataInputStream(fstream);
-			 BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			 FileInputStream fstream1 = new FileInputStream(cashierFile);
+			 DataInputStream in1 = new DataInputStream(fstream1);
+			 BufferedReader br1 = new BufferedReader(new InputStreamReader(in1));
 			 String strLine;
-			 while ((strLine = br.readLine()) != null)   {
+			 while ((strLine = br1.readLine()) != null)   {
+				 System.out.println(strLine);
 			 		menu.addCashier(strLine);
 				   //menu.addInventory(Integer.parseInt(tokens[0]),tokens[1],Integer.parseInt(tokens[2]),Float.parseFloat(tokens[3]));
 				   //(new Retail_Item(Integer.parseInt(tokens[0]),tokens[1],Integer.parseInt(tokens[2]),Float.parseFloat(tokens[2])));
 			 }
-			 in.close();
+			 in1.close();
 		   }
 		catch (Exception e){
 		     System.err.println("Error: " + e.getMessage());
 		 }
 		//menu.show_items(null); //display items
+ 		
+ 		menu.displayInventory();
+		menu.display_menu();
+ 		menu.getTotal();
 		
 		for(Retail_Item obj : list)
 		{

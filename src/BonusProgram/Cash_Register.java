@@ -17,8 +17,8 @@ public class Cash_Register {
 	ArrayList<Retail_Item> cart = new ArrayList<Retail_Item>();
 	ArrayList<String> cashier = new ArrayList<String>();
 	
-	Random rand = new Random(); 
-	int value = rand.nextInt(cashier.size());
+	static Random rand = new Random(); 
+	//int value = rand.nextInt(cashier.size());
 
 	Scanner input = new Scanner(System.in);
 	double totalPrice;
@@ -168,7 +168,8 @@ public class Cash_Register {
 	
 	public void writeFile()
 	{
-		int value = rand.nextInt(cashier.size());
+		int value1 = cashier.size();
+		int value = rand.nextInt(value1);
 
 		PrintWriter outputFile1;
 		try {
@@ -176,9 +177,10 @@ public class Cash_Register {
 
 			outputFile1.println("              *************************RECEIPT****************");
 
-			cart.stream()
-			.sorted()
-			.forEach(item -> outputFile1.printf("%5d  %-15s  %4d  %7.2f \n", item.getNumber(),item.getDescription(),item.getQuantity(),item.getPrice()));
+			for(Retail_Item item : cart)
+				{
+				outputFile1.printf("%5d  %-15s  %4d  %7.2f \n", item.getNumber(),item.getDescription(),item.getQuantity(),item.getPrice());
+				}
 
 			totalPrice = getTotal();
 			tax = totalPrice * 0.05;
@@ -189,8 +191,9 @@ public class Cash_Register {
 
 			LocalDate a = LocalDate.now();
 		    
-			outputFile1.println(a);
 			outputFile1.printf(cashier.get(value));
+			outputFile1.printf("\ndate: " + a);
+
 			outputFile1.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
