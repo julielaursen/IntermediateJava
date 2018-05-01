@@ -59,4 +59,9 @@ public class Retail_Item implements Comparable<Retail_Item>
 		}
 		return this.description.compareToIgnoreCase(other.description);
 	}
+	
+
+	public void reduceQuantity(int amount) {
+		quantity -= amount;
+	}
 }

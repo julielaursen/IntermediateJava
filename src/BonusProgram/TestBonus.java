@@ -55,7 +55,7 @@ public class TestBonus {
  		
  		menu.displayInventory();
 		menu.display_menu();
- 		menu.getTotal();
+ 		//menu.getTotal();
 		
 		for(Retail_Item obj : list)
 		{

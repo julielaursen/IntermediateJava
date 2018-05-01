@@ -1,9 +1,12 @@
 package BonusProgram;
 
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,13 +24,13 @@ public class Cash_Register {
 	//int value = rand.nextInt(cashier.size());
 
 	Scanner input = new Scanner(System.in);
-	double totalPrice;
-	double tax;
-	double grandTotal;
+	//double totalPrice;
+	//double tax;
+	//double grandTotal;
 
 	Integer[] integers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 		
-	float total = 0;
+	//float total = 0;
 	int sentinal = 0;
 
 			
@@ -40,16 +43,6 @@ public class Cash_Register {
 
 			System.out.print("Please select the item you wish to purchase.\n");
 			System.out.print("Program Menu: \n");
-//			System.out.print("1. Pants\n");
-//			System.out.print("2. Jeans\n");
-//			System.out.print("3. Shirt\n");
-//			System.out.print("4. Dress\n");
-//			System.out.print("5. Socks\n");
-//			System.out.print("6. Sweater\n");
-//			System.out.print("7. Jacket\n");
-//			System.out.print("8. Suit\n");
-//			System.out.print("9. Swimsuit\n");
-//			System.out.print("10. Skirt\n");
 			for (Retail_Item item : inventory) {
 				itemIndex++;
 				System.out.printf("%2d. %s \n", itemIndex, item.getDescription());
@@ -61,7 +54,7 @@ public class Cash_Register {
 			if(sentinal < 11)
 			{
 			Retail_Item purchase = inventory.get(sentinal -1);
-			purchase.setQuantity(1);
+			//purchase.setQuantity(1);
 			purchase_item(purchase);
 			
 			}
@@ -72,38 +65,34 @@ public class Cash_Register {
 			}
 			else if(sentinal == 12)
 				show_items();
-			else
+			else{
 				sentinal = -1;
-		}
-		if (sentinal == -1)
-		{
-			System.out.println("Your total purchase items were:\n");
-			//show_items();
-			//System.out.println("Your total price + tax was:\n");
-			//for (Retail_Item item : cart)
-			//{
-				//System.out.print(item.toString());
-			//}
-			cart.stream()
-			.sorted()
-			.forEach(item -> System.out.printf("%5d  %-15s  %4d  %7.2f \n", item.getNumber(),item.getDescription(),item.getQuantity(),item.getPrice()));
+				System.out.println("Your total purchase items were:\n");
 
-			System.out.printf("   %-15s  %17.2f \n", "Total", total);
-			System.out.printf("   %-15s  %17.2f \n", "Tax", tax);
-			System.out.printf("   %-15s  %17.2f \n", "Grand Total", grandTotal);
-		
-			System.out.println("\nY to confirm and accept a receipt or N to clear your cart and start over ");
-			input.nextLine();
-			String userSelection = input.nextLine();
-			if (!userSelection.equalsIgnoreCase("Y")) {
-				clearRegister();										// if user doesn't want list, go clear it
+				cart.stream()
+				.sorted()
+				.forEach(item -> System.out.printf("%5d  %-15s  %4d  %7.2f %n", item.getNumber(),item.getDescription(),item.getQuantity(),item.getPrice()));
+
+				float totalPrice = getTotal();
+				double tax = totalPrice * 0.05;
+				double grandTotal = totalPrice + tax;
+				System.out.printf("   %-15s  %17.2f %n", "Total", totalPrice);
+				System.out.printf("   %-15s  %17.2f %n", "Tax", tax);
+				System.out.printf("   %-15s  %17.2f %n", "Grand Total", grandTotal);
+
+				System.out.println("%nY to confirm and accept a receipt or N to clear your cart and start over ");
+				input.nextLine();
+				String userSelection = input.nextLine();
+				if (!userSelection.equalsIgnoreCase("Y")) {
+					clearRegister();										// if user doesn't want list, go clear it
+					sentinal = 1;
+				}
+				else {
+					writeFile();
+					reduceInventory();
+				}
 			}
-			else 
-				writeFile();
-			//print time and date on the receipt
-			//print cashier's name from cashier file
 		}
-		
 		return sentinal;
 	}
 	
@@ -135,14 +124,15 @@ public class Cash_Register {
 		//	}
 	//	return cart;
 		
-		cart.add(item);
-		
+		Retail_Item purchasedItem = new Retail_Item(item.getNumber(), item.getDescription(), 1, item.getPrice());	
+		cart.add(purchasedItem);
 		
 		//deprecate quantity by one
  	}
 
 	public float getTotal()
 	{
+		float total = 0;
 		//total = total + r.getPrice();
 		//System.out.println(total);
 		//return total;
@@ -173,31 +163,57 @@ public class Cash_Register {
 
 		PrintWriter outputFile1;
 		try {
-			outputFile1 = new PrintWriter("receipt.txt");
+			outputFile1 = new PrintWriter(new FileWriter( "receipt.txt" ));
 
 			outputFile1.println("              *************************RECEIPT****************");
 
 			for(Retail_Item item : cart)
 				{
-				outputFile1.printf("%5d  %-15s  %4d  %7.2f \n", item.getNumber(),item.getDescription(),item.getQuantity(),item.getPrice());
+				outputFile1.printf("%5d  %-15s  %4d  %7.2f %n", item.getNumber(),item.getDescription(),item.getQuantity(),item.getPrice());
 				}
 
-			totalPrice = getTotal();
-			tax = totalPrice * 0.05;
-			grandTotal = totalPrice + tax;
-			outputFile1.printf("   %-15s  %17.2f \n", "Total", totalPrice);
-			outputFile1.printf("   %-15s  %17.2f \n", "Tax", tax);
-			outputFile1.printf("   %-15s  %17.2f \n", "Grand Total", grandTotal);
+			float totalPrice = getTotal();
+			double tax = totalPrice * 0.05;
+			double grandTotal = totalPrice + tax;
+			outputFile1.printf("   %-15s  %17.2f %n", "Total", totalPrice);
+			outputFile1.printf("   %-15s  %17.2f %n", "Tax", tax);
+			outputFile1.printf("   %-15s  %17.2f %n", "Grand Total", grandTotal);
 
-			LocalDate a = LocalDate.now();
+			LocalDateTime a = LocalDateTime.now();
 		    
 			outputFile1.printf(cashier.get(value));
-			outputFile1.printf("\ndate: " + a);
+			outputFile1.printf("%ndate: " + a);
 
 			outputFile1.close();
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+public void reduceInventory() {
+		
+		Retail_Item item = null;
+		int itemId = 0;
+		int amount = 0;
+		for (int i = 0; i < cart.size(); i++) {
+			item = cart.get(i);					// get item from cart
+			itemId = item.getNumber();		// get item number
+			amount = item.getQuantity();		// get amount sold so can be put back into inventory
+			//cart.remove(i);					// remove this item from purchased list
+			
+			adjustInventory(itemId, amount);
+		}	
+		//inventory.forEach(item1 -> System.out.printf("%5d  %-15s  %4d  %7.2f \n", item1.getNumber(),item1.getDescription(),item1.getQuantity(),item1.getPrice()));	}
+}
+		// adjust inventory by amount sold
+	public void adjustInventory(int itemId, int amount) {
+		
+		for (Retail_Item item : inventory) {
+			if (item.getNumber() == itemId) {		// if this item = target id, reduce amount of this item
+				item.reduceQuantity(amount);
+				System.out.println("reducing item " + itemId + " inventory by " + amount);
+			}
 		}
 	}
 
